@@ -4,6 +4,10 @@
 #include <assignment_2_2023/PlanningAction.h>
 #include <iostream>
 #include <thread>
+#include <assignment_2_2023/Pos_vel.h>
+#include <nav_msgs/Odometry.h>
+
+ros::Publisher pub;
 
 void cancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>& ac)
 {
@@ -25,10 +29,26 @@ void cancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>
 	
 }
 
+
+void Pos_vel_callback(const nav_msgs::Odometry::ConstPtr& msg)
+{
+	assignment_2_2023::Pos_vel pos_vel;
+	pos_vel.x = msg->pose.pose.position.x;
+	pos_vel.y = msg->pose.pose.position.y;
+	pos_vel.vel_x = msg->twist.twist.linear.x;
+	pos_vel.vel_z = msg->twist.twist.angular.z;
+	pub.publish(pos_vel);
+}
+
+
 int main(int argc, char **argv)
 {
 	//initialization
 	ros::init(argc, argv, "aclient");
+	ros::NodeHandle nh;
+	
+	ros::Subscriber sub = nh.subscribe("/odom",1,Pos_vel_callback);
+	pub = nh.advertise<assignment_2_2023::Pos_vel>("/Pos_vel",1);
 	
 	actionlib::SimpleActionClient<assignment_2_2023::PlanningAction> ac("/reaching_goal",true);
 	ac.waitForServer();

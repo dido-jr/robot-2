@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   roscpp
   rospy
+  message_generation
   sensor_msgs
   std_msgs
   std_srvs
@@ -54,11 +55,12 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+add_message_files(
+   FILES
 #   Message1.msg
 #   Message2.msg
-# )
+    Pos_vel.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -78,6 +80,7 @@ find_package(catkin REQUIRED COMPONENTS
    DEPENDENCIES
    actionlib_msgs
    geometry_msgs
+   nav_msgs
  )
 
 ################################################
@@ -152,6 +155,7 @@ add_executable(aclient src/aclient.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(aclient ${aclient_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
