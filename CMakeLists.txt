@@ -63,11 +63,13 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
+add_service_files(
+   FILES
 #   Service1.srv
 #   Service2.srv
-# )
+    Last_target.srv
+    Dist_speed.srv
+)
 
 ## Generate actions in the 'action' folder
  add_action_files(
@@ -81,6 +83,7 @@ add_message_files(
    actionlib_msgs
    geometry_msgs
    nav_msgs
+   std_msgs
  )
 
 ################################################
@@ -145,6 +148,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/assignment_2_2023_node.cpp)
 add_executable(aclient src/aclient.cpp)
+add_executable(last_target src/last_target.cpp)
+add_executable(dist_speed src/dist_speed.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -156,12 +161,15 @@ add_executable(aclient src/aclient.cpp)
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(aclient ${aclient_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(last_target ${last_target_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(aclient ${catkin_LIBRARIES})
+target_link_libraries(last_target ${catkin_LIBRARIES})
+target_link_libraries(dist_speed ${catkin_LIBRARIES})
 
 #############
 ## Install ##
