@@ -162,6 +162,7 @@ add_executable(dist_speed src/dist_speed.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(aclient ${aclient_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(last_target ${last_target_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(dist_speed ${dist_speed_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node

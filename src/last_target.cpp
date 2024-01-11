@@ -2,7 +2,7 @@
 #include <assignment_2_2023/PlanningAction.h>
 #include <assignment_2_2023/Last_target.h>
 
-//ros::ServiceClient cc;
+
 float last_goal_x;
 float last_goal_y;
 
