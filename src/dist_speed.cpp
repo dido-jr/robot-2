@@ -13,18 +13,12 @@ int N = 0;
 float sum_x = 0.0, sum_z = 0.0;
 
 
-void pos_vel_cllbck(const assignment_2_2023::Pos_vel::ConstPtr& msg)
+void average_speed(float vel__x, float vel__z)
 {
-	//actual pose and vel from custom msg
-	x = msg->x;
-	y = msg->y;
-	float vel_x = msg->vel_x;
-	float vel_z = msg->vel_z;
-	
 	if (count < N)
 	{
-		sum_x += vel_x;
-		sum_z += vel_z;
+		sum_x += vel__x;
+		sum_z += vel__z;
 	}
 	else if (count == N)
 	{
@@ -39,7 +33,21 @@ void pos_vel_cllbck(const assignment_2_2023::Pos_vel::ConstPtr& msg)
 		vel_x_m =0.0;
 		vel_z_m =0.0;
 	}
-	count++;	
+	count++;
+}
+
+
+
+void pos_vel_cllbck(const assignment_2_2023::Pos_vel::ConstPtr& msg)
+{
+	//actual pose and vel from custom msg
+	x = msg->x;
+	y = msg->y;
+	float vel_x = msg->vel_x;
+	float vel_z = msg->vel_z;
+	
+	average_speed(vel_x, vel_z);
+	
 }
 
 

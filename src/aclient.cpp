@@ -27,7 +27,7 @@ void cancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>
     	
 	ac.cancelGoal();
 	ROS_INFO("Goal has been cancelled");
-	//std::terminate();
+
     }
     else if (userInput == 'y' && ac.getState().toString()=="SUCCEEDED")
     {
@@ -40,7 +40,7 @@ void cancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>
 void setcancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>& ac)
 {
     while(1){
-	//goal
+	//set goal
 	assignment_2_2023::PlanningGoal goal;
 	
 	std::cout<<"Enter x coordinate: ";
@@ -54,8 +54,7 @@ void setcancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningActi
 
 	//cancel goal
 	std::thread cancelGoalThread(cancelGoal, std::ref(ac));
-	actionlib::SimpleClientGoalState stati = ac.getState();
-	ROS_INFO("Goal reached: %s", stati.toString().c_str());
+
 	//status
 	ac.waitForResult();
 	actionlib::SimpleClientGoalState state = ac.getState();
@@ -71,10 +70,12 @@ void Pos_vel_callback(const nav_msgs::Odometry::ConstPtr& msg)
 {
      //publishing the information received from odom
      assignment_2_2023::Pos_vel pos_vel;
+     
      pos_vel.x = msg->pose.pose.position.x;
      pos_vel.y = msg->pose.pose.position.y;
      pos_vel.vel_x = msg->twist.twist.linear.x;
      pos_vel.vel_z = msg->twist.twist.angular.z;
+     
      pub.publish(pos_vel);
      
 }
@@ -87,9 +88,13 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "aclient");
 	ros::NodeHandle nh;
 	
+	//subscriber to robot position
 	ros::Subscriber sub = nh.subscribe("/odom",1,Pos_vel_callback);
+	
+	//publisher set up
 	pub = nh.advertise<assignment_2_2023::Pos_vel>("/Pos_vel",1000);
 	
+	//action client
 	actionlib::SimpleActionClient<assignment_2_2023::PlanningAction> ac("/reaching_goal",true);
 	
 	ac.waitForServer();
