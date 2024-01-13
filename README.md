@@ -61,7 +61,7 @@ Furthermore, this functions are implemented with threads in a such way that, the
  - initialization of the publisher 
 
  callback of the subscriber:
- - fill the custom message fields with the of the message of type Odometry
+ - fill the custom message fields with the information of the message of type Odometry
 ```
 The custom message Pos_vel.msg has been constructed to accept four float values corresponding to (x,y, vel_x, vel_z)
 
