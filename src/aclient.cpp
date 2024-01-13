@@ -6,8 +6,9 @@
 #include <thread>
 #include <assignment_2_2023/Pos_vel.h>
 #include <nav_msgs/Odometry.h>
+#include<string>
 
-
+float pos_vel_x, pos_vel_y, pos_vel_vel_x, pos_vel_vel_z;
 
 ros::Publisher pub;
 
@@ -21,42 +22,24 @@ void cancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>
 	std::cout<<"Insert a valid input: 'y' if you want to cancel the target, 'n' otherwise: ";
 	std::cin>>userInput;
     }
-    if (userInput == 'y' && ac.getState().toString().c_str()!="SUCCEEDED")
+    if (userInput == 'y' && ac.getState().toString()!="SUCCEEDED")
     {
+    	
 	ac.cancelGoal();
 	ROS_INFO("Goal has been cancelled");
 	//std::terminate();
+    }
+    else if (userInput == 'y' && ac.getState().toString()=="SUCCEEDED")
+    {
+    	ROS_INFO("Goal already reached! Choose a new target ");
     }
 
 	
 }
 
-
-void Pos_vel_callback(const nav_msgs::Odometry::ConstPtr& msg)
-{
-     assignment_2_2023::Pos_vel pos_vel;
-     pos_vel.x = msg->pose.pose.position.x;
-     pos_vel.y = msg->pose.pose.position.y;
-     pos_vel.vel_x = msg->twist.twist.linear.x;
-     pos_vel.vel_z = msg->twist.twist.angular.z;
-     pub.publish(pos_vel);
-}
-
-
-int main(int argc, char **argv)
+void setcancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>& ac)
 {
     while(1){
-	//initialization
-	ros::init(argc, argv, "aclient");
-	ros::NodeHandle nh;
-	
-	ros::Subscriber sub = nh.subscribe("/odom",1,Pos_vel_callback);
-	pub = nh.advertise<assignment_2_2023::Pos_vel>("/Pos_vel",1);
-	
-	actionlib::SimpleActionClient<assignment_2_2023::PlanningAction> ac("/reaching_goal",true);
-	
-	ac.waitForServer();
-	
 	//goal
 	assignment_2_2023::PlanningGoal goal;
 	
@@ -67,20 +50,55 @@ int main(int argc, char **argv)
 	std::cin>>goal.target_pose.pose.position.y;
 	
 	ac.sendGoal(goal);
+	ROS_INFO("Reaching the goal...");
 
 	//cancel goal
-	//std::thread cancelGoalThread(cancelGoal, std::ref(ac));
-	cancelGoal(ac);
-	
+	std::thread cancelGoalThread(cancelGoal, std::ref(ac));
+	actionlib::SimpleClientGoalState stati = ac.getState();
+	ROS_INFO("Goal reached: %s", stati.toString().c_str());
 	//status
 	ac.waitForResult();
 	actionlib::SimpleClientGoalState state = ac.getState();
-	ROS_INFO("Goal reached: %s", state.toString().c_str());
-	//return 0;
+	std::string stato = state.toString();
+	if (stato == "SUCCEEDED"){
+	ROS_INFO("Goal reached: %s", state.toString().c_str());}
 	
-	//cancelGoalThread.join();
-     }
-     ros::spin();
+	cancelGoalThread.join();
+    }
+}
+
+void Pos_vel_callback(const nav_msgs::Odometry::ConstPtr& msg)
+{
+     //publishing the information received from odom
+     assignment_2_2023::Pos_vel pos_vel;
+     pos_vel.x = msg->pose.pose.position.x;
+     pos_vel.y = msg->pose.pose.position.y;
+     pos_vel.vel_x = msg->twist.twist.linear.x;
+     pos_vel.vel_z = msg->twist.twist.angular.z;
+     pub.publish(pos_vel);
+     
+}
+
+
+int main(int argc, char **argv)
+{
+
+	//initialization
+	ros::init(argc, argv, "aclient");
+	ros::NodeHandle nh;
+	
+	ros::Subscriber sub = nh.subscribe("/odom",1,Pos_vel_callback);
+	pub = nh.advertise<assignment_2_2023::Pos_vel>("/Pos_vel",1000);
+	
+	actionlib::SimpleActionClient<assignment_2_2023::PlanningAction> ac("/reaching_goal",true);
+	
+	ac.waitForServer();
+	
+	std::thread setcancelGoalThread(setcancelGoal, std::ref(ac));
+	
+	ros::spin();
+
+
      return 0;
 	
 }

@@ -15,7 +15,7 @@ void last_target_callbck(const assignment_2_2023::PlanningActionGoal::ConstPtr& 
 }
 
 
-bool last_target(assignment_2_2023::Last_target::Response& res, assignment_2_2023::Last_target::Request& req)
+bool last_target(assignment_2_2023::Last_target::Request& req, assignment_2_2023::Last_target::Response& res)
 { 
 
 	res.x = last_goal_x; 
