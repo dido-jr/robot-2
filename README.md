@@ -31,7 +31,7 @@ While the data published on the topic are visible running:
 $ rostopic echo /Pos_vel
 ```
 
-###Node A###
+### Node A ###
 
 
 The node `aclient.cpp` implements an action client that:
@@ -65,15 +65,15 @@ Furthermore, this functions are implemented with threads in a such way that, the
 ```
 The custom message Pos_vel.msg has been constructed to accept four float values corresponding to (x,y, vel_x, vel_z)
 
-###Node B###
+### Node B ###
 
 The node `last_target.cpp` when called, returns the coordinates of the last target sent by the user, subscribing the goal topic of the actionLib and pushing its fields in the service /last_target.
 
-###Node C###
+### Node C ###
 
 The node dist_speed.cpp subscribes the robot's position and velocity (using the custom message) and implements a server to retrieve the distance of the robot from the target and the robot's average speed.
 
-###RQT_Graph###
+### RQT_Graph ###
 
 The ros graph of the application showing nodes and topics:
 
