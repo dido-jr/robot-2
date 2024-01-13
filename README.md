@@ -79,3 +79,7 @@ The ros graph of the application showing nodes and topics:
 
 ![Testo alternativo](/rosgraph.png)
 
+### Possible improvements ###
+A more complex algorithm than bug0 could be used to takes smarter decisions.
+A check should be made on the coordinates entered by the user, also because once the user answers the question whether to delete the target or not, he does not have second chances to delete it.
+Threads could be better protected, in the sense that if the user enters unsolicited input it could be a problem if a thread is still active
