@@ -1,3 +1,26 @@
+/**
+*\file aclient.cpp
+*\brief implementation of action client, subscriber and publisher to deal with goal, velocity and position
+*\author Alberto Di Donna
+*\version 0.1
+*\date 27/02/2024
+*
+*\details
+*
+*Subscribes to:<BR>
+*	/odom
+*
+*Publishes to:<BR>
+*	/Pos_vel
+*
+*Clients:<BR>
+*	/reaching_goal
+*
+*Description:<BR>
+This node implements an action client allowing the user to set a goal (x,y) or to cancel it. The node also publishes the robot position and velocity as a custom message (x,y,vel_x,vel_z), by relying on the values published on the topic /odom
+**/
+
+
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -8,10 +31,14 @@
 #include <nav_msgs/Odometry.h>
 #include<string>
 
-float pos_vel_x, pos_vel_y, pos_vel_vel_x, pos_vel_vel_z;
 
-ros::Publisher pub;
+ros::Publisher pub; ///< declaration of the publisher
 
+
+/**
+*\brief This function allows the user to cancel the target
+*\param actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>& ac
+**/
 void cancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>& ac)
 {
     char userInput = ' ';
@@ -37,6 +64,11 @@ void cancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>
 	
 }
 
+
+/**
+*\brief This function allows the user to set the goal
+*\param actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>& ac
+**/
 void setcancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningAction>& ac)
 {
     while(1){
@@ -66,6 +98,11 @@ void setcancelGoal(actionlib::SimpleActionClient<assignment_2_2023::PlanningActi
     }
 }
 
+
+/**
+*\brief This function publishes the informations related to velocity and position
+*\param const nav_msgs::Odometry::ConstPtr& msg
+**/
 void Pos_vel_callback(const nav_msgs::Odometry::ConstPtr& msg)
 {
      //publishing the information received from odom
@@ -81,6 +118,11 @@ void Pos_vel_callback(const nav_msgs::Odometry::ConstPtr& msg)
 }
 
 
+/**
+*\brief The main function initialize the node, the subscriber, the publisher and the action client
+*\param int argc
++\param char **argv
+**/
 int main(int argc, char **argv)
 {
 
