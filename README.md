@@ -7,10 +7,12 @@ Research track 1 - Assignment 2
 In this repo is implemented the bug0 algorithm for a mobile robot in Rviz, a tool for ROS Visualization, and Gazebo, the 3D simulator for ROS.
 There are also other nodes to retrieve some important information from the simulation.
 
+Documentation available also at this [link](https://dido-jr.github.io/robot-2/)
+
 Installing and running
 ----------------------
 
-Once the environment is installed and the repository has been cloned, run:
+Once the environment is installed and the repository has been cloned, rename the repo into assignment_2_2023, then run:
 ```bash
 $ catkin_make
 ```
